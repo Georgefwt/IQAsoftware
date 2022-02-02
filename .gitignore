@@ -1,0 +1,5 @@
+db.sqlite3
+webplayer/migrations/
+/media/
+__pycache__
+__init__.py
