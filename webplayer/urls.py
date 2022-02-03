@@ -1,4 +1,4 @@
-from django.urls import path,include
+from django.urls import path,include,re_path
 from . import views
 from django.contrib.staticfiles.views import serve
 # from django.conf import settings
@@ -7,7 +7,7 @@ from django.contrib.staticfiles.views import serve
 urlpatterns = [
     path('',views.assessment,name='assessment'),
     path('favicon.ico', serve, {'path': 'img/favicon.ico'}),
-    # path('article<int:id>/', views.article_detail, name='article_detail'),
+    re_path(r'^get_quality/$',views.get_quality)
 ]
 
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
