@@ -5,9 +5,11 @@ from django.contrib.staticfiles.views import serve
 # from django.conf.urls.static import static
 
 urlpatterns = [
-    path('',views.assessment,name='assessment'),
+    path('',views.login,name='loginpage'),
+    path('qa/',views.assessment,name='assessment'),
     path('favicon.ico', serve, {'path': 'img/favicon.ico'}),
-    re_path(r'^get_quality/$',views.get_quality)
+    re_path(r'^get_quality/$',views.get_quality),
+    re_path(r'^get_next/$',views.get_next_video)
 ]
 
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
