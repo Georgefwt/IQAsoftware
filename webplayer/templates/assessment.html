@@ -15,31 +15,10 @@
 
       function repaint_video(data){
         console.log(data);
-        // let videowrap=$('#videowrap');
-        var videowrap = document.querySelector('#videowrap');
-        if (videowrap) console.log('find videowrap!');
-        videowrap.innerHTML = `
-        <h3 class="text-center">${data.video_caption}</h3>
-        <p id="current_videoID" style="display:none">${data.video_videoID}</p>
-        <video
-        id="my-video"
-        class="video-js vjs-default-skin vjs-big-play-centered"
-        controls
-        preload="auto"
-        width="auto"
-        height="auto"
-        autoplay="true"
-        muted
-        data-setup="{}">
-          <source src="${data.video_url}" type="video/mp4" />
-          <p class="vjs-no-js">
-            To view this video please enable JavaScript, and consider upgrading to a
-            web browser that
-            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-          </p>
-        </video>
-        `;
-
+        $('#current_videocaption').text(data.video_caption);
+        $('#current_videoID').text(data.video_videoID);
+        $('#my-video_html5_api').attr("src",data.video_url);
+        $('#current_video').attr("src",data.video_url);
       }
 
       $(function(){
@@ -51,29 +30,44 @@
               console.log('send data successfully');
               testednumber+=1;
               $.get('/get_next/?testednumber='+testednumber,function(data){
+                if (data["status"]=="end"){
+                  window.location.replace("{% url 'thankspage' %}");
+                }
                 repaint_video(data);
               });
             }
           })
         })
-      })
-
-      $(function(){
         $('#btn_uncertain').click(function(){
           let videoid = $('#current_videoID').text();
           $.get('/get_quality/?res=1&id='+videoid,function(data){
             if (data["status"]!='ok') console.log("can't recieve response");
-            else console.log('send data successfully');
+            else {
+              console.log('send data successfully');
+              testednumber+=1;
+              $.get('/get_next/?testednumber='+testednumber,function(data){
+                if (data["status"]=="end"){
+                  window.location.replace("{% url 'thankspage' %}");
+                }
+                repaint_video(data);
+              });
+            }
           })
         })
-      })
-
-      $(function(){
         $('#btn_fake').click(function(){
           let videoid = $('#current_videoID').text();
           $.get('/get_quality/?res=0&id='+videoid,function(data){
             if (data["status"]!='ok') console.log("can't recieve response");
-            else console.log('send data successfully');
+            else {
+              console.log('send data successfully');
+              testednumber+=1;
+              $.get('/get_next/?testednumber='+testednumber,function(data){
+                if (data["status"]=="end"){
+                  window.location.replace("{% url 'thankspage' %}");
+                }
+                repaint_video(data);
+              });
+            }
           })
         })
       })
@@ -83,8 +77,8 @@
   <body>
     <h1>Hello, world!</h1>
     <hr>
-    <div class="container" id="videowrap">
-      <h3 class="text-center">{{video.caption}}</h3>
+    <div class="container">
+      <h3 class="text-center" id="current_videocaption">{{video.caption}}</h3>
       <p id="current_videoID" style="display:none">{{video.videoID}}</p>
       <video
       id="my-video"
@@ -96,15 +90,17 @@
       autoplay="true"
       muted
       data-setup="{}">
-        <source src="{{video.video.url}}" type="video/mp4" />
+        <source src="{{video.video.url}}" id="current_video" type="video/mp4" />
         <p class="vjs-no-js">
           To view this video please enable JavaScript, and consider upgrading to a
           web browser that
           <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
         </p>
       </video>
+      <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
     </div>
-    <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+    
+    
     
     <hr>
     <input type="button" id="btn_true" value="自然，不是伪造视频">

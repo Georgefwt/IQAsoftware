@@ -7,6 +7,7 @@ from django.contrib.staticfiles.views import serve
 urlpatterns = [
     path('',views.login,name='loginpage'),
     path('qa/',views.assessment,name='assessment'),
+    path('thanks/',views.thanksPage,name='thankspage'),
     path('favicon.ico', serve, {'path': 'img/favicon.ico'}),
     re_path(r'^get_quality/$',views.get_quality),
     re_path(r'^get_next/$',views.get_next_video)

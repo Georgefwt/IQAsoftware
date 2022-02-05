@@ -44,10 +44,10 @@ def get_quality(request):
         case.review_result = 0
         current_video.review_fake_number+=1
     else:
-        return JsonResponse({'status':'ok'})
+        return JsonResponse({"status":"ok"})
     case.save()
     current_video.save()
-    return JsonResponse({'status':'ok'})
+    return JsonResponse({"status":"ok"})
 
 def login(request):
     return render(request, "login.html")
@@ -58,7 +58,9 @@ def get_next_video(request):
     if (video_tested_number<10): # temporarily set test number as 10
         video = next_video_policy()
         return JsonResponse({"video_caption":video.caption,"video_videoID":video.videoID, \
-            "video_url":video.video.url})
+            "video_url":video.video.url,"status":"ok"})
     else:
-        pass
-        # return render(request, "thanks.html")
+        return JsonResponse({"status":"end"})
+
+def thanksPage(request):
+    return render(request, "thanks.html")
