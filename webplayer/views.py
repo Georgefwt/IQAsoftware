@@ -8,13 +8,14 @@ import random
 def first_video_policy():
     total_video_number = Video.objects.count()
     rand_video_ID = random.randint(1,total_video_number)
-    print("first rand video ID:{}".format(rand_video_ID))
     return Video.objects.get(videoID=rand_video_ID)
 
-def next_video_policy():
+def next_video_policy(tested_video_list):
     total_video_number = Video.objects.count()
-    rand_video_ID = random.randint(1,total_video_number)
-    print("next rand video ID:{}".format(rand_video_ID))
+    while True:
+        rand_video_ID = random.randint(1,total_video_number)
+        if(rand_video_ID not in tested_video_list):
+            break
     return Video.objects.get(videoID=rand_video_ID)
 
 
@@ -22,7 +23,9 @@ def next_video_policy():
 def assessment(request):
     # video = Video.objects.all()
     video = first_video_policy()
-    return render(request,"assessment.html",{"video":video,"testednumber":0})
+    response = render(request,"assessment.html",{"video":video,"testednumber":0})
+    response.set_cookie('v_id',str(video.videoID))
+    return response
 
 def get_quality(request):
     res = request.GET.get('res')
@@ -55,10 +58,16 @@ def login(request):
 def get_next_video(request):
     video_tested_number = request.GET.get('testednumber')
     video_tested_number = int(video_tested_number)
+
+    vid_cookie = request.COOKIES['v_id']
+
     if (video_tested_number<10): # temporarily set test number as 10
-        video = next_video_policy()
-        return JsonResponse({"video_caption":video.caption,"video_videoID":video.videoID, \
+        tested_video_list = list(map(int, vid_cookie.split('&')))
+        video = next_video_policy(tested_video_list)
+        response = JsonResponse({"video_caption":video.caption,"video_videoID":video.videoID, \
             "video_url":video.video.url,"status":"ok"})
+        response.set_cookie("v_id",vid_cookie+"&"+str(video.videoID))
+        return response
     else:
         return JsonResponse({"status":"end"})
 
