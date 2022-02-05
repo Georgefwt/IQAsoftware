@@ -11,18 +11,14 @@
     <title>Hello, world!</title>
   </head>
   <body>
-    <h1>Start quality assessment!</h1>
+    <h1>登录失败！</h1><br>
 
-    <form method="post" action="/login_check/">
-      {% csrf_token %}
-      <p>姓名：</p>
-      <input type="text" name="username"><br>
-      <p>邮箱：</p>
-      <input type="text" name="email"><br>
-      <p>序列号：</p>
-      <input type="text" name="serialnumber"><br>
-      <input type="submit" value="登录">
-    </form>
+    <p>您输入的序列号有误，请输入姓名、邮箱地址以及正确序列号进行登录！</p><br>
+    <p>获取序列号请联系georgefen@qq.com，注意，个序列号仅用于一次测试。</p><br>
+    <p>如有问题，请联系georgefen@qq.com</p><br>
+    <a href="{% url 'loginpage' %}">
+        <p>回到登录首页</p>
+    </a>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

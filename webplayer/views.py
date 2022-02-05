@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse,JsonResponse
 from django.core import serializers
-from .models import Video,testcase
+from .models import Video,testcase,User
 import random
 
 # policy for selecting video
@@ -20,21 +20,48 @@ def next_video_policy(tested_video_list):
 
 
 # Create your views here.
-def assessment(request):
+
+def login_check(request):
+    username = request.POST.get('username')
+    email = request.POST.get('email')
+    serial = request.POST.get('serialnumber')
+    try:
+        user = User.objects.get(userSerialNumber=serial)
+        if (user.user_tested_times == 0):
+            user.userName = username
+            user.userEmail = email
+            user.user_tested_times=1
+            user.save()
+            response = redirect('/qa/')
+            response.set_cookie('serial',serial)
+            return response
+        return redirect('/login_fail/')
+    except Exception as e:
+        return redirect('/login_fail/')
+
+def login(request):
+    return render(request, "login.html")
+
+def login_fail(request):
+    return render(request, "loginfail.html")
+
+def assessment(request): # first render assessment page
     # video = Video.objects.all()
     video = first_video_policy()
     response = render(request,"assessment.html",{"video":video,"testednumber":0})
     response.set_cookie('v_id',str(video.videoID))
     return response
 
-def get_quality(request):
+def get_quality(request): # get quality score
     res = request.GET.get('res')
     res = int(res)
     video_ID = request.GET.get('id')
     video_ID = int(video_ID)
+    user_serial = request.COOKIES.get('serial')
+    user_serial = int(user_serial)
 
     case = testcase()
-    case.testerSerialNumber = 12345 # temporarily set serial number to 12345
+    case.testerSerialNumber = user_serial
     case.videoID = video_ID
     current_video = Video.objects.get(videoID=video_ID)
     if res == 2:
@@ -52,10 +79,7 @@ def get_quality(request):
     current_video.save()
     return JsonResponse({"status":"ok"})
 
-def login(request):
-    return render(request, "login.html")
-
-def get_next_video(request):
+def get_next_video(request): # prepare for next video
     video_tested_number = request.GET.get('testednumber')
     video_tested_number = int(video_tested_number)
 

@@ -1,3 +1,4 @@
+from tokenize import blank_re
 from django.db import models
 
 # Create your models here.
@@ -10,7 +11,7 @@ class Video(models.Model):
     review_fake_number = models.IntegerField(default=0) # total negative review number
 
 class testcase(models.Model):
-    caseID = models.IntegerField(primary_key=True)
+    caseID = models.AutoField(primary_key=True)
     testerSerialNumber = models.IntegerField()
     videoID = models.IntegerField()
     review_result = models.IntegerField() # 2 represent real, 1 represent uncertain, 0 represent fake
@@ -18,5 +19,6 @@ class testcase(models.Model):
 class User(models.Model):
     userID = models.AutoField(primary_key=True)
     userSerialNumber = models.IntegerField() # serial number for login
-    userName = models.CharField(max_length=16)
-    userEmail = models.CharField(max_length=30)
+    userName = models.CharField(max_length=16,blank=True,null=True)
+    userEmail = models.CharField(max_length=30,blank=True,null=True)
+    user_tested_times = models.IntegerField(default=0)
