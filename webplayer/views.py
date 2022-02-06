@@ -25,19 +25,21 @@ def login_check(request):
     username = request.POST.get('username')
     email = request.POST.get('email')
     serial = request.POST.get('serialnumber')
-    try:
-        user = User.objects.get(userSerialNumber=serial)
-        if (user.user_tested_times == 0):
-            user.userName = username
-            user.userEmail = email
-            user.user_tested_times=1
-            user.save()
-            response = redirect('/qa/')
-            response.set_cookie('serial',serial)
-            return response
-        return redirect('/login_fail/')
-    except Exception as e:
-        return redirect('/login_fail/')
+    if (username and email and serial): # make sure all data exist
+        try:
+            user = User.objects.get(userSerialNumber=serial)
+            if (user.user_tested_times == 0):
+                user.userName = username
+                user.userEmail = email
+                user.user_tested_times=1
+                user.save()
+                response = redirect('/qa/')
+                response.set_cookie('serial',serial)
+                return response
+            return redirect('/login_fail/')
+        except Exception as e:
+            return redirect('/login_fail/')
+    return redirect('/login_fail/')
 
 def login(request):
     return render(request, "login.html")
@@ -46,19 +48,23 @@ def login_fail(request):
     return render(request, "loginfail.html")
 
 def assessment(request): # first render assessment page
-    # video = Video.objects.all()
-    video = first_video_policy()
-    response = render(request,"assessment.html",{"video":video,"testednumber":0})
-    response.set_cookie('v_id',str(video.videoID))
-    return response
+    if ('serial' in request.COOKIES):
+        user_serial = request.COOKIES.get('serial')
+        if (User.objects.filter(userSerialNumber=user_serial)):
+            video = first_video_policy()
+            response = render(request,"assessment.html",{"video":video,"testednumber":0})
+            response.set_cookie('v_id',str(video.videoID))
+            return response
+    return redirect('/login_fail/')
 
 def get_quality(request): # get quality score
+    user_serial = request.COOKIES.get('serial')
+    user_serial = int(user_serial)
+
     res = request.GET.get('res')
     res = int(res)
     video_ID = request.GET.get('id')
     video_ID = int(video_ID)
-    user_serial = request.COOKIES.get('serial')
-    user_serial = int(user_serial)
 
     case = testcase()
     case.testerSerialNumber = user_serial
