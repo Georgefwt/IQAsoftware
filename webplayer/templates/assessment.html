@@ -1,12 +1,6 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
     <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
     <title>Video Quality Assessment</title>
     <script src="/static/js/jquery-3.6.0.js"></script>
@@ -19,6 +13,8 @@
         $('#current_videoID').text(data.video_videoID);
         $('#my-video_html5_api').attr("src",data.video_url);
         $('#current_video').attr("src",data.video_url);
+        $('#current_videocount').text("您当前评估了"+testednumber+"个视频");
+        $('#current_videocount_p').text("您当前评估了"+testednumber+"个视频，还有"+(10-testednumber)+"个视频需要评估。");
       }
 
       $(function(){
@@ -73,45 +69,71 @@
       })
 
     </script>
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
-    <hr>
-    <div class="container">
-      <h3 class="text-center" id="current_videocaption">{{video.caption}}</h3>
-      <p id="current_videoID" style="display:none">{{video.videoID}}</p>
-      <video
-      id="my-video"
-      class="video-js vjs-default-skin vjs-big-play-centered"
-      controls
-      preload="auto"
-      width="auto"
-      height="auto"
-      autoplay="true"
-      muted
-      data-setup="{}">
-        <source src="{{video.video.url}}" id="current_video" type="video/mp4" />
-        <p class="vjs-no-js">
-          To view this video please enable JavaScript, and consider upgrading to a
-          web browser that
-          <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-        </p>
-      </video>
-      <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
-    </div>
-    
-    
-    
-    <hr>
-    <input type="button" id="btn_true" value="自然，不是伪造视频">
-    <input type="button" id="btn_uncertain" value="有些不自然，可能是伪造视频">
-    <input type="button" id="btn_fake" value="不自然，是伪造视频">
+{% endblock %}
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!-- jQuery loaded at top -->
-    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% block content %}
+
+<div class="container" style="margin-top: 1.5em;">
+  <div class="row">
+    <div class="col-sm-3">
+      
+      <div class="card border border-light" style="box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);">
+        <div class="card-body">
+          <h5 class="card-title" style="text-align: center;font-size: 1.5rem;">打分介绍</h5>
+          <hr>
+          <p class="card-text">请您对右侧视频进行评价。若您认为视频是自然视频，不是合成伪造视频，选择左边按钮；认为视频是伪造视频，选择右侧按钮；难以判断，选择中间按钮。选择完成后，自动进入下一个视频。</p>
+          <p id="current_videocount_p">您当前评估了0个视频，还有10个视频需要评估。
+            若有疑问，请联系georgefen@qq.com</p>
+        </div>
+      </div>
+
+      <span>
+      </span>
+    </div>
+    <div class="col-sm-9">
+      <div class="card border border-light" style="box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);">
+        <div class="card-body">
+
+          <div class="container">
+            <h2 class="text-center" id="current_videocount">您当前评估了0个视频</h2>
+            <h2 class="text-center" id="current_videocaption" style="display:none">{{video.caption}}</h2>
+            <p id="current_videoID" style="display:none">{{video.videoID}}</p>
+            <hr>
+            <video
+            id="my-video"
+            class="video-js vjs-default-skin vjs-big-play-centered"
+            controls
+            preload="auto"
+            autoplay="true"
+            muted
+            data-setup='{"fluid":true,"aspectRatio":"16:9"}'>
+              <source src="{{video.video.url}}" id="current_video" type="video/mp4" />
+              <p class="vjs-no-js">
+                To view this video please enable JavaScript, and consider upgrading to a
+                web browser that
+                <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+              </p>
+            </video>
+            <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+          </div>
+      
+          <hr>
+          <div class="container" style="text-align: center;">
+            <div class="btn-group" role="group">
+              <button type="button" id="btn_true" class="btn btn-success">自然，不是伪造视频</button>
+              <button type="button" id="btn_uncertain" class="btn btn-warning">有些不自然，可能是伪造视频</button>
+              <button type="button" id="btn_fake" class="btn btn-danger">不自然，是伪造视频</button>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+    
+
+{% endblock %}

@@ -1,46 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block head %}
-    <title>Hello, world!</title>
+    <title>平台登录</title>
 {% endblock %}
 
 {% block content %}
-  <div class="container">
-    <div class="row">
-      <div class="col-3">
-      </div>
-      <div class="col-6">
 
-        <div class="card" style="top: 50%;box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);">
-          <div class="card-header" style="font-size:2.2em;text-align: center;">开始您的测试！</div>
-          <div class="card-body">
-            
-            <form method="post" action="/login_check/">
-              {% csrf_token %}
-              <div class="mb-3">
-                <label class="form-label" style="font-size: 1.2em;">姓名：</label>
-                <input type="text" name="username" class="form-control" placeholder="你的名字">
-                <div id="emailHelp" class="form-text">我们不会与任何人分享你的姓名</div>
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label" style="font-size: 1.2em;">邮箱：</label>
-                <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">我们不会与任何人分享你的邮箱</div>
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label" style="font-size: 1.2em;">序列号：</label>
-                <input type="text" name="serialnumber" class="form-control" id="exampleInputPassword1">
-              </div>
-              <button type="submit" class="btn btn-primary" style="display:block;margin:0 auto;">登录</button>
-            </form>
-
-          </div>
+<div style="width: 40%;height: 50%;top: 50%;left:50%;position: absolute;transform: translate(-50%,-50%);">
+  <div class="card border border-light" style="box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);">
+    <div class="card-header" style="font-size:2.2em;text-align: center;">开始您的评估！</div>
+    <div class="card-body">
+      
+      <form method="post" action="/login_check/">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label" style="font-size: 1.2em;">姓名：</label>
+          <input type="text" name="username" class="form-control" placeholder="你的名字">
+          <div id="emailHelp" class="form-text">我们不会与任何人分享你的姓名</div>
         </div>
-        
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label" style="font-size: 1.2em;">邮箱：</label>
+          <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+          <div id="emailHelp" class="form-text">我们不会与任何人分享你的邮箱</div>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label" style="font-size: 1.2em;">序列号：</label>
+          <input type="text" name="serialnumber" class="form-control" id="exampleInputPassword1">
+        </div>
+        <button type="submit" class="btn btn-primary" style="display:block;margin:0 auto;">登录</button>
+      </form>
 
-      </div>
-      <div class="col-3">
-      </div>
     </div>
   </div>
+</div>
+    
 {% endblock %}

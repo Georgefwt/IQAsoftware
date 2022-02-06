@@ -21,7 +21,7 @@
 
     <nav class="navbar navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#" id="navbarwrap">
+        <a class="navbar-brand" href="{% url 'loginpage' %}" id="navbarwrap">
           <img
             src="/static/img/navbaricon.png"
             class="me-2"
@@ -44,7 +44,6 @@
         >浙ICP备20029333号-1 </a
       >
       <p class="copyright">| &copy; made by George, supported by Django</p>
-      {% block foot %} {% endblock %}
     </footer>
   </body>
 </html>

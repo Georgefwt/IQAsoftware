@@ -26,6 +26,7 @@ body {
     top: 0px;
     left: 0px;
     right: 0px;
+    min-height: 100%;
     font-size: 1rem;
     line-height: 1.42857;
     overflow-x: hidden;

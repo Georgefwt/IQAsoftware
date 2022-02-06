@@ -1,29 +1,23 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+    <title>登陆失败</title>
+{% endblock %}
+{% block content %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<div style="width: 40%;height: 50%;top: 50%;left:50%;position: absolute;transform: translate(-50%,-50%);">
 
-    <title>Hello, world!</title>
-  </head>
-  <body>
-    <h1>登录失败！</h1><br>
-
-    <p>请输入姓名、邮箱地址以及正确序列号进行登录！</p><br>
-    <p>获取序列号请联系georgefen@qq.com，注意，个序列号仅用于一次测试。</p><br>
-    <p>如有问题，请联系georgefen@qq.com</p><br>
-    <a href="{% url 'loginpage' %}">
-        <p>回到登录首页</p>
-    </a>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
-</html>
+  <div class="card border border-light" style="box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);">
+    <div class="card-header" style="font-size:2.2em;text-align: center;">登录失败！</div>
+    <div class="card-body">
+      <h5 class="card-title">请输入姓名、邮箱地址以及正确序列号进行登录！</h5>
+      <br>
+      <p class="card-text">获取序列号请联系<strong>georgefen@qq.com</strong>，注意，<strong style="color: red;">一个序列号仅用于一次测试。</strong></p>
+      <p class="card-text">如有问题，请联系<strong>georgefen@qq.com</strong>。</p><br>
+      <a href="{% url 'loginpage' %}" style="text-decoration:none;text-align: center;">
+          <p>回到登录首页</p>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
