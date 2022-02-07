@@ -35,6 +35,7 @@ def login_check(request):
                 user.save()
                 response = redirect('/qa/')
                 response.set_cookie('serial',serial)
+                response.delete_cookie('v_id')
                 return response
             return redirect('/login_fail/')
         except Exception as e:
@@ -56,10 +57,10 @@ def assessment(request): # first render assessment page
             if ('v_id' in request.COOKIES): # deal with refresh situration
                 vid_cookie = request.COOKIES['v_id']
                 tested_video_list = list(map(int, vid_cookie.split('&')))
-                if (len(tested_video_list)>=10):
-                    return redirect('/thanks/')
+                # if (len(tested_video_list)>=10):
+                #     return redirect('/thanks/')
                 video = Video.objects.get(videoID=tested_video_list[-1])
-                response = render(request,"assessment.html",{"video":video,"testednumber":len(tested_video_list)})
+                response = render(request,"assessment.html",{"video":video,"testednumber":(len(tested_video_list)-1)})
                 response.set_cookie('v_id',vid_cookie)
                 return response
             else: # first enter, not refresh
@@ -71,7 +72,7 @@ def assessment(request): # first render assessment page
 
 def get_quality(request): # get quality score
     user_serial = request.COOKIES.get('serial')
-    user_serial = int(user_serial)
+    # user_serial = int(user_serial)
 
     res = request.GET.get('res')
     res = int(res)
@@ -112,7 +113,7 @@ def get_next_video(request): # prepare for next video
         return response
     else:
         user_serial = request.COOKIES.get('serial')
-        user_serial = int(user_serial)
+        # user_serial = int(user_serial)
         user = User.objects.get(userSerialNumber=user_serial)
         user.user_tested_times=1 # when test finished, make user_tested_times as 1
         user.save()

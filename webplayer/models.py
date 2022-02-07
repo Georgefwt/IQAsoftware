@@ -12,13 +12,13 @@ class Video(models.Model):
 
 class testcase(models.Model):
     caseID = models.AutoField(primary_key=True)
-    testerSerialNumber = models.IntegerField()
+    testerSerialNumber = models.CharField(max_length=100)
     videoID = models.IntegerField()
     review_result = models.IntegerField() # 2 represent real, 1 represent uncertain, 0 represent fake
 
 class User(models.Model):
     userID = models.AutoField(primary_key=True)
-    userSerialNumber = models.IntegerField() # serial number for login
+    userSerialNumber = models.CharField(max_length=100) # serial number for login
     userName = models.CharField(max_length=16,blank=True,null=True)
     userEmail = models.CharField(max_length=30,blank=True,null=True)
     user_tested_times = models.IntegerField(default=0)
