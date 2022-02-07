@@ -5,6 +5,7 @@ requirments:
     Django==3.2
     dj-static
     static-ranges
+    django-mathfilters
 
 ### Usage
 superuser

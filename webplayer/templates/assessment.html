@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load mathfilters %}
+
 {% block head %}
     <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
     <title>Video Quality Assessment</title>
@@ -82,8 +84,8 @@
           <h5 class="card-title" style="text-align: center;font-size: 1.5rem;">打分介绍</h5>
           <hr>
           <p class="card-text">请您对右侧视频进行评价。若您认为视频是自然视频，不是合成伪造视频，选择左边按钮；认为视频是伪造视频，选择右侧按钮；难以判断，选择中间按钮。选择完成后，自动进入下一个视频。</p>
-          <p id="current_videocount_p">您当前评估了0个视频，还有10个视频需要评估。
-            若有疑问，请联系georgefen@qq.com</p>
+          <p id="current_videocount_p">您当前评估了{{ testednumber }}个视频，还有{{ testednumber|mul:-1|add:10 }}个视频需要评估。
+            若有问题，请联系georgefen@qq.com</p>
         </div>
       </div>
 
@@ -95,7 +97,7 @@
         <div class="card-body">
 
           <div class="container">
-            <h2 class="text-center" id="current_videocount">您当前评估了0个视频</h2>
+            <h5 class="card-title text-center" id="current_videocount" style="text-align: center;font-size: 1.5rem;">您当前评估了{{ testednumber }}个视频</h5>
             <h2 class="text-center" id="current_videocaption" style="display:none">{{video.caption}}</h2>
             <p id="current_videoID" style="display:none">{{video.videoID}}</p>
             <hr>

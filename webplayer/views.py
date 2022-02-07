@@ -31,7 +31,7 @@ def login_check(request):
             if (user.user_tested_times == 0):
                 user.userName = username
                 user.userEmail = email
-                user.user_tested_times=1
+                #user.user_tested_times=1
                 user.save()
                 response = redirect('/qa/')
                 response.set_cookie('serial',serial)
@@ -49,12 +49,24 @@ def login_fail(request):
 
 def assessment(request): # first render assessment page
     if ('serial' in request.COOKIES):
+
         user_serial = request.COOKIES.get('serial')
         if (User.objects.filter(userSerialNumber=user_serial)):
-            video = first_video_policy()
-            response = render(request,"assessment.html",{"video":video,"testednumber":0})
-            response.set_cookie('v_id',str(video.videoID))
-            return response
+
+            if ('v_id' in request.COOKIES): # deal with refresh situration
+                vid_cookie = request.COOKIES['v_id']
+                tested_video_list = list(map(int, vid_cookie.split('&')))
+                if (len(tested_video_list)>=10):
+                    return redirect('/thanks/')
+                video = Video.objects.get(videoID=tested_video_list[-1])
+                response = render(request,"assessment.html",{"video":video,"testednumber":len(tested_video_list)})
+                response.set_cookie('v_id',vid_cookie)
+                return response
+            else: # first enter, not refresh
+                video = first_video_policy()
+                response = render(request,"assessment.html",{"video":video,"testednumber":0})
+                response.set_cookie('v_id',str(video.videoID))
+                return response
     return redirect('/login_fail/')
 
 def get_quality(request): # get quality score
@@ -99,6 +111,11 @@ def get_next_video(request): # prepare for next video
         response.set_cookie("v_id",vid_cookie+"&"+str(video.videoID))
         return response
     else:
+        user_serial = request.COOKIES.get('serial')
+        user_serial = int(user_serial)
+        user = User.objects.get(userSerialNumber=user_serial)
+        user.user_tested_times=1 # when test finished, make user_tested_times as 1
+        user.save()
         return JsonResponse({"status":"end"})
 
 def thanksPage(request):
