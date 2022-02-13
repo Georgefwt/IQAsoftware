@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-qnk*lto6by)^@&i-=8ryk4q2-(*u*d8w&9)vj$p(cyby!a7v6w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # Application definition
@@ -115,3 +115,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR,"media/")
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static/')
+
+# AppDirectoriesFinder will find files stored in the static subdirectory of each app.
+
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'webplayer/static/'),
+# )
