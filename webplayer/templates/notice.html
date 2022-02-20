@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+    <title>Video Quality Assessment</title>
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+{% endblock %}
+{% block content %}
+
+<div style="width: 95%;height: 60%;top: 50%;left:50%;position: absolute;transform: translate(-50%,-50%);display: flex;">
+
+  <div class="card border border-light" style="margin: auto;box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);">
+    <div class="card-header" style="font-size:2.2em;text-align: center;">测试前需知</div>
+    <div class="card-body">
+      <p class="card-text">测试前，确保您的显示设备良好。显示设备应至少满足720p+30帧视频播放需求。且显示设备处于合适亮度。</p>
+      <p class="card-text">测试时长约为12分钟，期间请确保您看完整个视频。视频结束后，下方会出现相应指标。选择完成后自动进入下一个视频。</p>
+      <p class="card-text">您一共有30个视频需要评估。在给出您的评估前，视频支持拖动进度条回放。</p>
+      <p class="card-text">更多显示器测试内容，可访问以下链接：</p>
+      <ul>
+        <li>
+          <a href="https://www.eizo.no/accessories/software/monitor-test/">
+            <p>https://www.eizo.no/accessories/software/monitor-test/</p>
+          </a>
+        </li>
+        <li>
+          <a href="http://www.lagom.nl/lcd-test/">
+            <p>http://www.lagom.nl/lcd-test/</p>
+          </a>
+        </li>
+      </ul>
+    
+      <p class="card-text">如有问题，请联系<strong>georgefen@qq.com</strong>。</p><br>
+      <ul class="list-group" style="margin: 10px;">
+        <li class="list-group-item">
+          <input class="form-check-input me-1" type="checkbox" id="precheck">
+          我已了解，并确保显示设备良好。
+        </li>
+      </ul>
+      <button type="submit" class="btn btn-primary" style="display:block;margin:0 auto;" onclick=javascrtpt:jump()>
+        开始评估
+      </button>
+
+    </div>
+  </div>
+</div>
+<script>
+  function jump(){
+    if ($('#precheck').is(":checked")){
+      window.location.href="{% url 'assessment' %}";
+    }
+  }
+</script>
+{% endblock %}

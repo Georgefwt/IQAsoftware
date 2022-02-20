@@ -33,7 +33,7 @@ def login_check(request):
                 user.userEmail = email
                 #user.user_tested_times=1
                 user.save()
-                response = redirect('/qa/')
+                response = redirect('/notice')
                 response.set_cookie('serial',serial)
                 response.delete_cookie('v_id')
                 return response
@@ -69,6 +69,9 @@ def assessment(request): # first render assessment page
                 response.set_cookie('v_id',str(video.videoID))
                 return response
     return redirect('/login_fail/')
+
+def notice(request):
+    return render(request, "notice.html")
 
 def get_quality(request): # get quality score
     user_serial = request.COOKIES.get('serial')
