@@ -60,7 +60,7 @@ body {
     top: 0;
 }
 .grid-xu::before{
-    background: radial-gradient(circle , #5a5a5a .5px, transparent .5px);
+    background: radial-gradient(circle , #5a5a5a44 .5px, transparent .5px);
     background-size: 10px 10px;
 }
 

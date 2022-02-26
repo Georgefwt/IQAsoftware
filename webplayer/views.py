@@ -12,10 +12,12 @@ def first_video_policy():
 
 def next_video_policy(tested_video_list):
     total_video_number = Video.objects.count()
-    while True:
+    n = total_video_number
+    while n>0:
         rand_video_ID = random.randint(1,total_video_number)
         if(rand_video_ID not in tested_video_list):
             break
+        n -= 1
     return Video.objects.get(videoID=rand_video_ID)
 
 
@@ -74,32 +76,54 @@ def notice(request):
     return render(request, "notice.html")
 
 def get_quality(request): # get quality score
-    user_serial = request.COOKIES.get('serial')
-    # user_serial = int(user_serial)
+    try:
+        user_serial = request.COOKIES.get('serial')
+        dim1 = int(request.GET.get('dim1'))
+        dim2 = int(request.GET.get('dim2'))
+        dim3 = int(request.GET.get('dim3'))
+        video_ID = int(request.GET.get('id'))
 
-    res = request.GET.get('res')
-    res = int(res)
-    video_ID = request.GET.get('id')
-    video_ID = int(video_ID)
+        current_video = Video.objects.get(videoID=video_ID)
+        case = testcase()
+        case.testerSerialNumber = user_serial
+        case.videoID = video_ID
+        if (dim1!=-1 and dim2!=-1 and dim3!=-1):
+            case.review_d1 = dim1
+            case.review_d2 = dim2
+            case.review_d3 = dim3
 
-    case = testcase()
-    case.testerSerialNumber = user_serial
-    case.videoID = video_ID
-    current_video = Video.objects.get(videoID=video_ID)
-    if res == 2:
-        case.review_result = 2
-        current_video.review_real_number+=1
-    elif res == 1:
-        case.review_result = 1
-        current_video.review_uncertain_number+=1
-    elif res ==0:
-        case.review_result = 0
-        current_video.review_fake_number+=1
-    else:
-        return JsonResponse({"status":"ok"})
-    case.save()
-    current_video.save()
-    return JsonResponse({"status":"ok"})
+            if dim1 == 2:
+                current_video.review_d1r2+=1
+            elif dim1 == 1:
+                current_video.review_d1r1+=1
+            elif dim1 ==0:
+                current_video.review_d1r0+=1
+            else:
+                return JsonResponse({"status":"fail"})
+            if dim2 == 2:
+                current_video.review_d2r2+=1
+            elif dim2 == 1:
+                current_video.review_d2r1+=1
+            elif dim2 ==0:
+                current_video.review_d2r0+=1
+            else:
+                return JsonResponse({"status":"fail"})
+            if dim3 == 2:
+                current_video.review_d3r2+=1
+            elif dim3 == 1:
+                current_video.review_d3r1+=1
+            elif dim3 ==0:
+                current_video.review_d3r0+=1
+            else:
+                return JsonResponse({"status":"fail"})
+
+            case.save()
+            current_video.save()
+            return JsonResponse({"status":"ok"})
+        return JsonResponse({"status":"fail"})
+    except:
+        return JsonResponse({"status":"fail"})
+
 
 def get_next_video(request): # prepare for next video
     video_tested_number = request.GET.get('testednumber')
@@ -107,7 +131,7 @@ def get_next_video(request): # prepare for next video
 
     vid_cookie = request.COOKIES['v_id']
 
-    if (video_tested_number<10): # temporarily set test number as 10
+    if (video_tested_number<40): # set test number as 40
         tested_video_list = list(map(int, vid_cookie.split('&')))
         video = next_video_policy(tested_video_list)
         response = JsonResponse({"video_caption":video.caption,"video_videoID":video.videoID, \
@@ -116,7 +140,6 @@ def get_next_video(request): # prepare for next video
         return response
     else:
         user_serial = request.COOKIES.get('serial')
-        # user_serial = int(user_serial)
         user = User.objects.get(userSerialNumber=user_serial)
         user.user_tested_times=1 # when test finished, make user_tested_times as 1
         user.save()

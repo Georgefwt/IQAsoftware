@@ -7,12 +7,12 @@ admin.site.site_header = 'Video manager'  # config headererer
 admin.site.site_title = 'videomanager'
 
 class VideoInfoAdmin(admin.ModelAdmin):
-    list_display=['videoID','caption','review_real_number','review_uncertain_number','review_fake_number']
+    list_display=['videoID','caption']
     search_fields = ['videoID','caption']
 
 class testcaseInfoAdmin(admin.ModelAdmin):
-    list_display=['caseID','testerSerialNumber','videoID','review_result']
-    search_fields = ['videoID','testerSerialNumber','review_result']
+    list_display=['caseID','testerSerialNumber','videoID']
+    search_fields = ['videoID','testerSerialNumber']
 
 class UserInfoAdmin(admin.ModelAdmin):
     list_display=['userID','userSerialNumber','userName','userEmail','user_tested_times']

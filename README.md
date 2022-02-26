@@ -1,4 +1,4 @@
-## IQA sofrware
+## IQA software
 
 ### Build
 requirments:

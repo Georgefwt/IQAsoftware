@@ -8,6 +8,9 @@
     <script src="/static/js/jquery-3.6.0.min.js"></script>
     <script>
       let testednumber={{ testednumber }};
+      let dim1 = -1;
+      let dim2 = -1;
+      let dim3 = -1;
 
       function repaint_video(data){
         $('#current_videocaption').text(data.video_caption);
@@ -15,59 +18,70 @@
         $('#my-video_html5_api').attr("src",data.video_url);
         $('#current_video').attr("src",data.video_url);
         $('#current_videocount').text("您当前评估了"+testednumber+"个视频");
-        $('#current_videocount_p').text("您当前评估了"+testednumber+"个视频，还有"+(10-testednumber)+"个视频需要评估。");
+        $('#current_videocount_p').text("您当前评估了"+testednumber+"个视频，还有"+(40-testednumber)+"个视频需要评估。");
         $('#qa_button').css("visibility","hidden");
+        dim1 = -1;
+        dim2 = -1;
+        dim3 = -1;
+        $("#btn1_2").prop('checked', false);
+        $("#btn1_1").prop('checked', false);
+        $("#btn1_0").prop('checked', false);
+        $("#btn2_2").prop('checked', false);
+        $("#btn2_1").prop('checked', false);
+        $("#btn2_0").prop('checked', false);
+        $("#btn3_2").prop('checked', false);
+        $("#btn3_1").prop('checked', false);
+        $("#btn3_0").prop('checked', false);
       }
 
       $(function(){
-        $('#btn_true').click(function(){
-          let videoid = $('#current_videoID').text();
-          $.get('/get_quality/?res=2&id='+videoid,function(data){
-            if (data["status"]!='ok') console.log("can't recieve response");
-            else {
-              console.log('send data successfully');
-              testednumber+=1;
-              $.get('/get_next/?testednumber='+testednumber,function(data){
-                if (data["status"]=="end"){
-                  window.location.replace("{% url 'thankspage' %}");
-                }
-                repaint_video(data);
-              });
-            }
-          })
+        $('#btn1_2').click(function(){
+         dim1 = 2;
         })
-        $('#btn_uncertain').click(function(){
-          let videoid = $('#current_videoID').text();
-          $.get('/get_quality/?res=1&id='+videoid,function(data){
-            if (data["status"]!='ok') console.log("can't recieve response");
-            else {
-              console.log('send data successfully');
-              testednumber+=1;
-              $.get('/get_next/?testednumber='+testednumber,function(data){
-                if (data["status"]=="end"){
-                  window.location.replace("{% url 'thankspage' %}");
-                }
-                repaint_video(data);
-              });
-            }
-          })
+        $('#btn1_1').click(function(){
+          dim1 = 1;
         })
-        $('#btn_fake').click(function(){
-          let videoid = $('#current_videoID').text();
-          $.get('/get_quality/?res=0&id='+videoid,function(data){
-            if (data["status"]!='ok') console.log("can't recieve response");
-            else {
-              console.log('send data successfully');
-              testednumber+=1;
-              $.get('/get_next/?testednumber='+testednumber,function(data){
-                if (data["status"]=="end"){
-                  window.location.replace("{% url 'thankspage' %}");
-                }
-                repaint_video(data);
-              });
-            }
-          })
+        $('#btn1_0').click(function(){
+          dim1 = 0;
         })
+        $('#btn2_2').click(function(){
+          dim2 = 2;
+        })
+        $('#btn2_1').click(function(){
+          dim2 = 1;
+        })
+        $('#btn2_0').click(function(){
+          dim2 = 0;
+        })
+        $('#btn3_2').click(function(){
+          dim3 = 2;
+        })
+        $('#btn3_1').click(function(){
+          dim3 = 1;
+        })
+        $('#btn3_0').click(function(){
+          dim3 = 0;
+        })
+
+        $('#btn_submit').click(function(){
+          let videoid = $('#current_videoID').text();
+          if (dim1!=-1&&dim2!=-1&&dim3!=-1){
+            $.get('/get_quality/?dim1='+dim1+'&dim2='+dim2+'&dim3='+dim3+'&id='+videoid,function(data){
+              if (data["status"]!='ok') console.log("can't recieve response");
+              else {
+                console.log('send data successfully');
+                testednumber+=1;
+                $.get('/get_next/?testednumber='+testednumber,function(data){
+                  if (data["status"]=="end"){
+                    window.location.replace("{% url 'thankspage' %}");
+                  }
+                  repaint_video(data);
+                });
+              }
+            })
+          }
+        })
+
       })
 
     </script>
@@ -84,7 +98,7 @@
           <h5 class="card-title" style="text-align: center;font-size: 1.5rem;">打分介绍</h5>
           <hr>
           <p class="card-text">请您对右侧视频进行评价。若您认为视频是自然视频，不是合成伪造视频，选择左边按钮；认为视频是伪造视频，选择右侧按钮；难以判断，选择中间按钮。选择完成后，自动进入下一个视频。</p>
-          <p id="current_videocount_p">您当前评估了{{ testednumber }}个视频，还有{{ testednumber|mul:-1|add:10 }}个视频需要评估。
+          <p id="current_videocount_p">您当前评估了{{ testednumber }}个视频，还有{{ testednumber|mul:-1|add:40 }}个视频需要评估。
             若有问题，请联系georgefen@qq.com</p>
         </div>
       </div>
@@ -121,8 +135,6 @@
       
           <hr>
 
-
-
         </div>
       </div>
 
@@ -130,11 +142,56 @@
         <div class="card-body">
 
           <div class="container" id="qa_button" style="text-align: center;visibility: hidden">
-            <div class="btn-group" role="group">
-              <button type="button" id="btn_true" class="btn btn-success">自然，不是伪造视频</button>
-              <button type="button" id="btn_uncertain" class="btn btn-warning">有些不自然，可能是伪造视频</button>
-              <button type="button" id="btn_fake" class="btn btn-danger">不自然，是伪造视频</button>
+            <div class="container">
+              
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d1" id="btn1_2" value="option1" />
+                <label class="form-check-label" for="inlineRadio1">人脸整体自然度高</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d1" id="btn1_1" value="option2" />
+                <label class="form-check-label" for="inlineRadio2">人脸整体自然度一般</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d1" id="btn1_0" value="option3" />
+                <label class="form-check-label" for="inlineRadio3">人脸整体自然度差</label>
+              </div>
+              
             </div>
+            <div class="container">
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d2" id="btn2_2" value="option1" />
+                <label class="form-check-label" for="inlineRadio1">视频流畅</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d2" id="btn2_1" value="option2" />
+                <label class="form-check-label" for="inlineRadio2">视频有些不流畅</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d2" id="btn2_0" value="option3" />
+                <label class="form-check-label" for="inlineRadio3">视频不流畅</label>
+              </div>
+
+            </div>
+            <div class="container">
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d3" id="btn3_2" value="option1" />
+                <label class="form-check-label" for="inlineRadio1">视频清晰度高</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d3" id="btn3_1" value="option2" />
+                <label class="form-check-label" for="inlineRadio2">视频清晰度中等</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d3" id="btn3_0" value="option3" />
+                <label class="form-check-label" for="inlineRadio3">视频清晰度低</label>
+              </div>
+
+            </div>
+            
+            <button type="button" class="btn btn-primary" id="btn_submit">下一个视频</button>
           </div>
 
         </div>
