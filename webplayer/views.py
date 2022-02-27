@@ -78,6 +78,9 @@ def notice(request):
 def get_quality(request): # get quality score
     try:
         user_serial = request.COOKIES.get('serial')
+        user = User.objects.get(userSerialNumber=user_serial)
+        if user is None:
+            return JsonResponse({"status":"fail"})
         dim1 = int(request.GET.get('dim1'))
         dim2 = int(request.GET.get('dim2'))
         dim3 = int(request.GET.get('dim3'))
@@ -131,13 +134,16 @@ def get_next_video(request): # prepare for next video
 
     vid_cookie = request.COOKIES['v_id']
 
-    if (video_tested_number<40): # set test number as 40
-        tested_video_list = list(map(int, vid_cookie.split('&')))
-        video = next_video_policy(tested_video_list)
-        response = JsonResponse({"video_caption":video.caption,"video_videoID":video.videoID, \
-            "video_url":video.video.url,"status":"ok"})
-        response.set_cookie("v_id",vid_cookie+"&"+str(video.videoID))
-        return response
+    if (video_tested_number<30): # set test number as 30
+        try:
+            tested_video_list = list(map(int, vid_cookie.split('&')))
+            video = next_video_policy(tested_video_list)
+            response = JsonResponse({"video_caption":video.caption,"video_videoID":video.videoID, \
+                "video_url":video.video.url,"status":"ok"})
+            response.set_cookie("v_id",vid_cookie+"&"+str(video.videoID))
+            return response
+        except:
+            return JsonResponse({"status":"error"})
     else:
         user_serial = request.COOKIES.get('serial')
         user = User.objects.get(userSerialNumber=user_serial)

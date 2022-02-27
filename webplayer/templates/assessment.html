@@ -11,6 +11,7 @@
       let dim1 = -1;
       let dim2 = -1;
       let dim3 = -1;
+      sessionStorage.setItem('videostatus','playing'); 
 
       function repaint_video(data){
         $('#current_videocaption').text(data.video_caption);
@@ -18,11 +19,13 @@
         $('#my-video_html5_api').attr("src",data.video_url);
         $('#current_video').attr("src",data.video_url);
         $('#current_videocount').text("您当前评估了"+testednumber+"个视频");
-        $('#current_videocount_p').text("您当前评估了"+testednumber+"个视频，还有"+(40-testednumber)+"个视频需要评估。");
-        $('#qa_button').css("visibility","hidden");
+        $('#current_videocount_p').text("您当前评估了"+testednumber+"个视频，还有"+(30-testednumber)+"个视频需要评估。");
+        $('#btn_submit').attr("disabled",true);
         dim1 = -1;
         dim2 = -1;
         dim3 = -1;
+        watchMaxTime = 0;
+        sessionStorage.setItem('videostatus','playing'); 
         $("#btn1_2").prop('checked', false);
         $("#btn1_1").prop('checked', false);
         $("#btn1_0").prop('checked', false);
@@ -65,7 +68,7 @@
 
         $('#btn_submit').click(function(){
           let videoid = $('#current_videoID').text();
-          if (dim1!=-1&&dim2!=-1&&dim3!=-1){
+          if (dim1!=-1&&dim2!=-1&&dim3!=-1&&sessionStorage['videostatus']=='done'){
             $.get('/get_quality/?dim1='+dim1+'&dim2='+dim2+'&dim3='+dim3+'&id='+videoid,function(data){
               if (data["status"]!='ok') console.log("can't recieve response");
               else {
@@ -81,7 +84,6 @@
             })
           }
         })
-
       })
 
     </script>
@@ -97,9 +99,12 @@
         <div class="card-body">
           <h5 class="card-title" style="text-align: center;font-size: 1.5rem;">打分介绍</h5>
           <hr>
-          <p class="card-text">请您对右侧视频进行评价。若您认为视频是自然视频，不是合成伪造视频，选择左边按钮；认为视频是伪造视频，选择右侧按钮；难以判断，选择中间按钮。选择完成后，自动进入下一个视频。</p>
-          <p id="current_videocount_p">您当前评估了{{ testednumber }}个视频，还有{{ testednumber|mul:-1|add:40 }}个视频需要评估。
-            若有问题，请联系georgefen@qq.com</p>
+          <p class="card-text" style="font-size: 1.15rem;">请您对右侧视频进行评价。从人脸自然度、视频流畅度、视频清晰度分别评价。选择完成后，点击“下一个视频”按钮进入下一个视频。</p>
+          <strong>
+            <p id="current_videocount_p" style="font-size: 1.2rem;">您当前评估了{{ testednumber }}个视频，还有{{ testednumber|mul:-1|add:30 }}个视频需要评估。
+              若有问题，请联系georgefen@qq.com</p>
+          </strong>
+        
         </div>
       </div>
 
@@ -141,7 +146,7 @@
       <div class="card border border-light" style="box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);">
         <div class="card-body">
 
-          <div class="container" id="qa_button" style="text-align: center;visibility: hidden">
+          <div class="container" id="qa_button" style="text-align: center">
             <div class="container">
               
               <div class="form-check form-check-inline">
@@ -191,7 +196,7 @@
 
             </div>
             
-            <button type="button" class="btn btn-primary" id="btn_submit">下一个视频</button>
+            <button type="button" class="btn btn-primary" id="btn_submit" disabled>下一个视频</button>
           </div>
 
         </div>
@@ -201,8 +206,35 @@
 </div>
 
 <script>
-  videojs('my-video').on('ended',function() { 
-    $('#qa_button').css("visibility","visible");
+  var watchMaxTime = 0;
+  var player = videojs('my-video',{
+          preload : "auto",
+          controls : true
+    },function onPlayerReady(){
+
+      var myPlayer = this;
+      myPlayer.on('timeupdate', function(){
+        var time = myPlayer.currentTime();
+        if (time > watchMaxTime) {
+            watchMaxTime = time;
+        }
+      });
+    });
+
+  videojs.use('*', function(player){
+      return {
+          setCurrentTime: function(time) {
+              if (time > watchMaxTime) {
+                  return watchMaxTime;
+              } else {
+                  return time;
+              }
+          }
+      };
+  });
+  videojs('my-video').on('ended',function() {
+    sessionStorage.setItem('videostatus','done'); 
+    $('#btn_submit').attr("disabled",false);
   }) 
 
 </script>
