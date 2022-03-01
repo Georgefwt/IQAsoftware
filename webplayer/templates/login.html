@@ -11,7 +11,7 @@
     <div class="card-header" style="font-size:2.2em;text-align: center;">开始您的评估！</div>
     <div class="card-body">
       
-      <form method="post" action="/login_check/">
+      <form method="post" action="{% url 'logincheckpage' %}">
         {% csrf_token %}
         <div class="mb-3">
           <label class="form-label" style="font-size: 1.2em;">姓名：</label>

@@ -35,14 +35,14 @@ def login_check(request):
                 user.userEmail = email
                 #user.user_tested_times=1
                 user.save()
-                response = redirect('/notice')
+                response = redirect('notice')
                 response.set_cookie('serial',serial)
                 response.delete_cookie('v_id')
                 return response
-            return redirect('/login_fail/')
+            return redirect('loginfailpage')
         except Exception as e:
-            return redirect('/login_fail/')
-    return redirect('/login_fail/')
+            return redirect('loginfailpage')
+    return redirect('loginfailpage')
 
 def login(request):
     return render(request, "login.html")
@@ -70,7 +70,7 @@ def assessment(request): # first render assessment page
                 response = render(request,"assessment.html",{"video":video,"testednumber":0})
                 response.set_cookie('v_id',str(video.videoID))
                 return response
-    return redirect('/login_fail/')
+    return redirect('loginfailpage')
 
 def notice(request):
     return render(request, "notice.html")
