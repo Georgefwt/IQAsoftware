@@ -50,6 +50,12 @@ def login(request):
 def login_fail(request):
     return render(request, "loginfail.html")
 
+def preassessment(request):
+    if ('serial' in request.COOKIES):
+        return render(request, "preassessment.html")
+    return redirect('loginfailpage')
+    
+
 def assessment(request): # first render assessment page
     if ('serial' in request.COOKIES):
 
@@ -59,8 +65,6 @@ def assessment(request): # first render assessment page
             if ('v_id' in request.COOKIES): # deal with refresh situration
                 vid_cookie = request.COOKIES['v_id']
                 tested_video_list = list(map(int, vid_cookie.split('&')))
-                # if (len(tested_video_list)>=10):
-                #     return redirect('/thanks/')
                 video = Video.objects.get(videoID=tested_video_list[-1])
                 response = render(request,"assessment.html",{"video":video,"testednumber":(len(tested_video_list)-1)})
                 response.set_cookie('v_id',vid_cookie)

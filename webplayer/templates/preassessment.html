@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load mathfilters %}
+
+{% block head %}
+    <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
+    <title>Video Quality Assessment</title>
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script>
+      let testednumber=0;
+      let dim1 = -1;
+      let dim2 = -1;
+      let dim3 = -1;
+
+      function repaint_video(_testednumber){
+        console.log(_testednumber);
+        $('#my-video_html5_api').attr("src",'/media/video/test/test'+(_testednumber+1)+'.mp4');
+        $('#current_video').attr("src",'/media/video/test/test'+(_testednumber+1)+'.mp4');
+        $('#current_videocount').text("您当前评估了"+(_testednumber)+"个测试视频");
+        $('#current_videocount_p').text("您当前评估了"+_testednumber+"个测试视频，还有"+(5-_testednumber)+"个测试视频需要评估。");
+        $('#btn_submit').attr("disabled",true);
+        dim1 = -1;
+        dim2 = -1;
+        dim3 = -1;
+        watchMaxTime = 0;
+        $("#btn1_2").prop('checked', false);
+        $("#btn1_1").prop('checked', false);
+        $("#btn1_0").prop('checked', false);
+        $("#btn2_2").prop('checked', false);
+        $("#btn2_1").prop('checked', false);
+        $("#btn2_0").prop('checked', false);
+        $("#btn3_2").prop('checked', false);
+        $("#btn3_1").prop('checked', false);
+        $("#btn3_0").prop('checked', false);
+      }
+
+      $(function(){
+        $('#btn1_2').click(function(){
+         dim1 = 2;
+        })
+        $('#btn1_1').click(function(){
+          dim1 = 1;
+        })
+        $('#btn1_0').click(function(){
+          dim1 = 0;
+        })
+        $('#btn2_2').click(function(){
+          dim2 = 2;
+        })
+        $('#btn2_1').click(function(){
+          dim2 = 1;
+        })
+        $('#btn2_0').click(function(){
+          dim2 = 0;
+        })
+        $('#btn3_2').click(function(){
+          dim3 = 2;
+        })
+        $('#btn3_1').click(function(){
+          dim3 = 1;
+        })
+        $('#btn3_0').click(function(){
+          dim3 = 0;
+        })
+
+        $('#btn_submit').click(function(){
+          let videoid = $('#current_videoID').text();
+          if (dim1!=-1&&dim2!=-1&&dim3!=-1){
+            if(testednumber<4){
+                testednumber++;
+                repaint_video(testednumber);
+            }
+            else{
+                window.location.href="{% url 'assessment' %}";
+            }
+          }
+        })
+      })
+
+    </script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container" style="margin-top: 1.5em;margin-bottom: 1.5rem;">
+  <div class="row">
+    <div class="col-sm-3">
+      
+      <div class="card border border-light" style="box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);">
+        <div class="card-body">
+          <h5 class="card-title" style="text-align: center;font-size: 1.5rem;">打分介绍</h5>
+          <hr>
+          <p class="card-text" style="font-size: 1.15rem;">请您对右侧视频进行评价。从人脸自然度、视频流畅度、视频清晰度分别评价。选择完成后，点击“下一个视频”按钮进入下一个视频。</p>
+          <strong>
+            <p id="current_videocount_p" style="font-size: 1.2rem;">您当前评估了0个测试视频，还有5个测试视频需要评估。
+              若有问题，请联系georgefen@qq.com</p>
+          </strong>
+        
+        </div>
+      </div>
+
+      <span>
+      </span>
+    </div>
+    <div class="col-sm-9">
+      <div class="card border border-light" style="box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);margin-bottom: 10px;">
+        <div class="card-body">
+
+          <div class="container">
+            <h5 class="card-title text-center" id="current_videocount" style="text-align: center;font-size: 1.5rem;">这是第1个测试视频</h5>
+            <hr>
+            <video
+            id="my-video"
+            class="video-js vjs-default-skin vjs-big-play-centered"
+            controls
+            preload="auto"
+            autoplay="true"
+            muted
+            data-setup='{"fluid":true,"aspectRatio":"16:9"}'>
+              <source src="/media/video/test/test1.mp4" id="current_video" type="video/mp4" />
+              <p class="vjs-no-js">
+                To view this video please enable JavaScript, and consider upgrading to a
+                web browser that
+                <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+              </p>
+            </video>
+            <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
+          </div>
+      
+          <hr>
+
+        </div>
+      </div>
+
+      <div class="card border border-light" style="box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);">
+        <div class="card-body">
+
+          <div class="container" id="qa_button" style="text-align: center">
+            <div class="container">
+              
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d1" id="btn1_2" value="option1" />
+                <label class="form-check-label" for="inlineRadio1">人脸整体自然度高</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d1" id="btn1_1" value="option2" />
+                <label class="form-check-label" for="inlineRadio2">人脸整体自然度一般</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d1" id="btn1_0" value="option3" />
+                <label class="form-check-label" for="inlineRadio3">人脸整体自然度差</label>
+              </div>
+              
+            </div>
+            <div class="container">
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d2" id="btn2_2" value="option1" />
+                <label class="form-check-label" for="inlineRadio1">视频流畅</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d2" id="btn2_1" value="option2" />
+                <label class="form-check-label" for="inlineRadio2">视频有些不流畅</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d2" id="btn2_0" value="option3" />
+                <label class="form-check-label" for="inlineRadio3">视频不流畅</label>
+              </div>
+
+            </div>
+            <div class="container">
+
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d3" id="btn3_2" value="option1" />
+                <label class="form-check-label" for="inlineRadio1">视频清晰度高</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d3" id="btn3_1" value="option2" />
+                <label class="form-check-label" for="inlineRadio2">视频清晰度中等</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d3" id="btn3_0" value="option3" />
+                <label class="form-check-label" for="inlineRadio3">视频清晰度低</label>
+              </div>
+
+            </div>
+            
+            <button type="button" class="btn btn-primary" id="btn_submit" disabled>下一个视频</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var watchMaxTime = 0;
+  var player = videojs('my-video',{
+          preload : "auto",
+          controls : true
+    },function onPlayerReady(){
+
+      var myPlayer = this;
+      myPlayer.on('timeupdate', function(){
+        var time = myPlayer.currentTime();
+        if (time > watchMaxTime) {
+            watchMaxTime = time;
+        }
+      });
+    });
+
+  videojs.use('*', function(player){
+      return {
+          setCurrentTime: function(time) {
+              if (time > watchMaxTime) {
+                  return watchMaxTime;
+              } else {
+                  return time;
+              }
+          }
+      };
+  });
+  videojs('my-video').on('ended',function() {
+    $('#btn_submit').attr("disabled",false);
+  }) 
+
+</script>
+
+{% endblock %}

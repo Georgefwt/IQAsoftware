@@ -10,9 +10,10 @@ urlpatterns = [
     path('',views.login,name='loginpage'),
     path('login_check/',views.login_check,name='logincheckpage'),
     path('login_fail/',views.login_fail,name="loginfailpage"),
+    path('preqa/',views.preassessment,name='preassessment'),
     path('qa/',views.assessment,name='assessment'),
     path('thanks/',views.thanksPage,name='thankspage'),
-    path('notice',views.notice,name='notice'),
+    path('notice/',views.notice,name='notice'),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
     path('get_quality/',views.get_quality),
     path('get_next/',views.get_next_video)
