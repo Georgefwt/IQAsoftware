@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.shortcuts import redirect, render
 from django.http import HttpResponse,JsonResponse
 from django.core import serializers
@@ -31,9 +32,13 @@ def login_check(request):
         try:
             user = User.objects.get(userSerialNumber=serial)
             if (user.user_tested_times == 0):
-                user.userName = username
+                if user.userName is None:
+                    user.userName = username
+                else:
+                    print(user.userName)
+                    if (user.userName!=username):
+                        return redirect('loginfailpage')
                 user.userEmail = email
-                #user.user_tested_times=1
                 user.save()
                 response = redirect('notice')
                 response.set_cookie('serial',serial)
