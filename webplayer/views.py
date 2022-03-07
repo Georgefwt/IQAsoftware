@@ -21,13 +21,25 @@ def next_video_policy(tested_video_list):
         n -= 1
     return Video.objects.get(videoID=rand_video_ID)
 
+def next_video_policy_large(tested_video_list):
+    total_video_number = Video.objects.count()
+    batchsize = total_video_number//30
+    n = batchsize+1
+    lastv_id = tested_video_list[-1]
+    while n>0:
+        rand_video_ID = (random.randint(batchsize*((lastv_id-1)//batchsize+1)+1, \
+            batchsize*((lastv_id-1)//batchsize+2))-1)%total_video_number + 1
+        if(rand_video_ID not in tested_video_list):
+            break
+        n -= 1
+    return Video.objects.get(videoID=rand_video_ID)
 
 # Create your views here.
 
 def login_check(request):
-    username = request.POST.get('username')
-    email = request.POST.get('email')
-    serial = request.POST.get('serialnumber')
+    username = request.POST.get('username').replace(" ","").replace("\t","")
+    email = request.POST.get('email').replace(" ","").replace("\t","")
+    serial = request.POST.get('serialnumber').replace(" ","").replace("\t","")
     if (username and email and serial): # make sure all data exist
         try:
             user = User.objects.get(userSerialNumber=serial)
