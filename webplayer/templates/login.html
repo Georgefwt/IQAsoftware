@@ -13,7 +13,7 @@
       <p class="card-text">请您确保网络状态良好，并尽量使用大屏设备进行评估。</p>
 
       <form method="post" action="{% url 'logincheckpage' %}">
-        {% csrf_token %}
+        <!-- {% csrf_token %} -->
         <div class="mb-3">
           <label class="form-label" style="font-size: 1.2em;">姓名：</label>
           <input type="text" name="username" class="form-control" placeholder="你的名字">
