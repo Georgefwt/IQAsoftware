@@ -216,21 +216,25 @@
       myPlayer.on('timeupdate', function(){
         var time = myPlayer.currentTime();
         if (time > watchMaxTime) {
-            watchMaxTime = time;
+          watchMaxTime = time;
+        }
+        if (time>8){
+          sessionStorage.setItem('videostatus','done'); 
+          $('#btn_submit').attr("disabled",false);
         }
       });
     });
 
   videojs.use('*', function(player){
-      return {
-          setCurrentTime: function(time) {
-              if (time > watchMaxTime) {
-                  return watchMaxTime;
-              } else {
-                  return time;
-              }
-          }
-      };
+    return {
+      setCurrentTime: function(time) {
+        if (time > watchMaxTime) {
+            return watchMaxTime;
+        } else {
+            return time;
+        }
+      }
+    };
   });
   videojs('my-video').on('ended',function() {
     sessionStorage.setItem('videostatus','done'); 

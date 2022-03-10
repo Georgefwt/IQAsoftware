@@ -43,7 +43,7 @@ def login_check(request):
     if (username and email and serial): # make sure all data exist
         try:
             user = User.objects.get(userSerialNumber=serial)
-            if (user.user_tested_times == 0):
+            if (user.user_tested_times < 30):
                 if user.userName is None:
                     user.userName = username
                 else:
@@ -69,7 +69,12 @@ def login_fail(request):
 
 def preassessment(request):
     if ('serial' in request.COOKIES):
-        return render(request, "preassessment.html")
+        user_serial = request.COOKIES.get('serial')
+        user = User.objects.get(userSerialNumber=user_serial)
+        if (user):
+            if user.user_tested_times > 0 :
+                return redirect('assessment')
+            return render(request, "preassessment.html")
     return redirect('loginfailpage')
     
 
@@ -77,7 +82,8 @@ def assessment(request): # first render assessment page
     if ('serial' in request.COOKIES):
 
         user_serial = request.COOKIES.get('serial')
-        if (User.objects.filter(userSerialNumber=user_serial)):
+        user = User.objects.get(userSerialNumber=user_serial)
+        if (user): # if user exist
 
             if ('v_id' in request.COOKIES): # deal with refresh situration
                 vid_cookie = request.COOKIES['v_id']
@@ -86,9 +92,9 @@ def assessment(request): # first render assessment page
                 response = render(request,"assessment.html",{"video":video,"testednumber":(len(tested_video_list)-1)})
                 response.set_cookie('v_id',vid_cookie)
                 return response
-            else: # first enter, not refresh
+            else: # enter, not refresh
                 video = first_video_policy()
-                response = render(request,"assessment.html",{"video":video,"testednumber":0})
+                response = render(request,"assessment.html",{"video":video,"testednumber":user.user_tested_times})
                 response.set_cookie('v_id',str(video.videoID))
                 return response
     return redirect('loginfailpage')
