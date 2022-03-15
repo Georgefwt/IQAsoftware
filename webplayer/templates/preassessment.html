@@ -9,29 +9,23 @@
     <script>
       let testednumber=0;
       let dim1 = -1;
-      let dim2 = -1;
-      let dim3 = -1;
+      // let dim2 = -1;
+      // let dim3 = -1;
 
       function repaint_video(_testednumber){
         console.log(_testednumber);
         $('#my-video_html5_api').attr("src",'/media/video/test/test'+(_testednumber+1)+'.mp4');
         $('#current_video').attr("src",'/media/video/test/test'+(_testednumber+1)+'.mp4');
-        $('#current_videocount').text("您当前评估了"+(_testednumber)+"个测试视频");
-        $('#current_videocount_p').text("您当前评估了"+_testednumber+"个测试视频，还有"+(5-_testednumber)+"个测试视频需要评估。");
+        $('#current_videocount').text("您当前已评估了"+(_testednumber)+"个测试视频");
+        $('#current_videocount_p').text("您当前已评估了"+_testednumber+"个测试视频，还有"+(5-_testednumber)+"个测试视频需要评估。");
         $('#btn_submit').attr("disabled",true);
         dim1 = -1;
-        dim2 = -1;
-        dim3 = -1;
+        // dim2 = -1;
+        // dim3 = -1;
         watchMaxTime = 0;
         $("#btn1_2").prop('checked', false);
         $("#btn1_1").prop('checked', false);
         $("#btn1_0").prop('checked', false);
-        $("#btn2_2").prop('checked', false);
-        $("#btn2_1").prop('checked', false);
-        $("#btn2_0").prop('checked', false);
-        $("#btn3_2").prop('checked', false);
-        $("#btn3_1").prop('checked', false);
-        $("#btn3_0").prop('checked', false);
       }
 
       $(function(){
@@ -44,28 +38,10 @@
         $('#btn1_0').click(function(){
           dim1 = 0;
         })
-        $('#btn2_2').click(function(){
-          dim2 = 2;
-        })
-        $('#btn2_1').click(function(){
-          dim2 = 1;
-        })
-        $('#btn2_0').click(function(){
-          dim2 = 0;
-        })
-        $('#btn3_2').click(function(){
-          dim3 = 2;
-        })
-        $('#btn3_1').click(function(){
-          dim3 = 1;
-        })
-        $('#btn3_0').click(function(){
-          dim3 = 0;
-        })
 
         $('#btn_submit').click(function(){
           let videoid = $('#current_videoID').text();
-          if (dim1!=-1&&dim2!=-1&&dim3!=-1){
+          if (dim1!=-1){
             if(testednumber<4){
                 testednumber++;
                 repaint_video(testednumber);
@@ -90,9 +66,11 @@
         <div class="card-body">
           <h5 class="card-title" style="text-align: center;font-size: 1.5rem;">打分介绍</h5>
           <hr>
-          <p class="card-text" style="font-size: 1.15rem;">请您对右侧视频进行评价。从人脸自然度、面部表情逼真度、人脸整体清晰度分别评价。选择完成后，点击“下一个视频”按钮进入下一个视频。</p>
+          <p class="card-text" style="font-size: 1.15rem;">请您对右侧视频进行评价。从人脸自然度、面部表情逼真度、人脸整体清晰度分别评价。选择完成后，点击“下一个视频”按钮进入下一个视频。
+          <strong>评价完五个测试视频后，进入正式评价环节，您将评价30个视频。</strong>
+          </p>
           <strong>
-            <p id="current_videocount_p" style="font-size: 1.2rem;">您当前评估了0个测试视频，还有5个测试视频需要评估。
+            <p id="current_videocount_p" style="font-size: 1.2rem;">您当前已评估了0个测试视频，还有5个测试视频需要评估。
               若有问题，请联系georgefen@qq.com</p>
           </strong>
         
@@ -140,49 +118,17 @@
               
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="d1" id="btn1_2" value="option1" />
-                <label class="form-check-label" for="inlineRadio1">人脸整体自然度高</label>
+                <label class="form-check-label" for="inlineRadio1">视频人脸部分自然</label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="d1" id="btn1_1" value="option2" />
-                <label class="form-check-label" for="inlineRadio2">人脸整体自然度一般</label>
+                <label class="form-check-label" for="inlineRadio2">不确定</label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="d1" id="btn1_0" value="option3" />
-                <label class="form-check-label" for="inlineRadio3">人脸整体自然度差</label>
+                <label class="form-check-label" for="inlineRadio3">视频人脸部分不自然</label>
               </div>
               
-            </div>
-            <div class="container">
-
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="d2" id="btn2_2" value="option1" />
-                <label class="form-check-label" for="inlineRadio1">面部表情逼真度高</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="d2" id="btn2_1" value="option2" />
-                <label class="form-check-label" for="inlineRadio2">面部表情逼真度一般</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="d2" id="btn2_0" value="option3" />
-                <label class="form-check-label" for="inlineRadio3">面部表情逼真度低</label>
-              </div>
-
-            </div>
-            <div class="container">
-
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="d3" id="btn3_2" value="option1" />
-                <label class="form-check-label" for="inlineRadio1">面部清晰度高</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="d3" id="btn3_1" value="option2" />
-                <label class="form-check-label" for="inlineRadio2">面部清晰度中等</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="d3" id="btn3_0" value="option3" />
-                <label class="form-check-label" for="inlineRadio3">面部清晰度低</label>
-              </div>
-
             </div>
             
             <button type="button" class="btn btn-primary" id="btn_submit" disabled>下一个视频</button>

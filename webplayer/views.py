@@ -108,21 +108,17 @@ def get_quality(request): # get quality score
         user = User.objects.get(userSerialNumber=user_serial)
         if user is None:
             return JsonResponse({"status":"fail"})
-        if user.user_tested_times > 30:
+        if user.user_tested_times >= 30:
             return JsonResponse({"status":"fail"})
         dim1 = int(request.GET.get('dim1'))
-        dim2 = int(request.GET.get('dim2'))
-        dim3 = int(request.GET.get('dim3'))
         video_ID = int(request.GET.get('id'))
 
         current_video = Video.objects.get(videoID=video_ID)
         case = testcase()
         case.testerSerialNumber = user_serial
         case.videoID = video_ID
-        if (dim1!=-1 and dim2!=-1 and dim3!=-1):
+        if (dim1!=-1):
             case.review_d1 = dim1
-            case.review_d2 = dim2
-            case.review_d3 = dim3
 
             if dim1 == 2:
                 current_video.review_d1r2+=1
@@ -130,22 +126,6 @@ def get_quality(request): # get quality score
                 current_video.review_d1r1+=1
             elif dim1 ==0:
                 current_video.review_d1r0+=1
-            else:
-                return JsonResponse({"status":"fail"})
-            if dim2 == 2:
-                current_video.review_d2r2+=1
-            elif dim2 == 1:
-                current_video.review_d2r1+=1
-            elif dim2 ==0:
-                current_video.review_d2r0+=1
-            else:
-                return JsonResponse({"status":"fail"})
-            if dim3 == 2:
-                current_video.review_d3r2+=1
-            elif dim3 == 1:
-                current_video.review_d3r1+=1
-            elif dim3 ==0:
-                current_video.review_d3r0+=1
             else:
                 return JsonResponse({"status":"fail"})
 
@@ -179,7 +159,7 @@ def get_next_video(request): # prepare for next video
         try:
             user_serial = request.COOKIES.get('serial')
             user = User.objects.get(userSerialNumber=user_serial)
-            user.user_tested_times=100 # when test finished, make user tested times as 100
+            # user.user_tested_times=100 # when test finished, make user tested times as 100
             user.save()
             return JsonResponse({"status":"end"})
         except:

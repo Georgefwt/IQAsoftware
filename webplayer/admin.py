@@ -11,7 +11,7 @@ class VideoInfoAdmin(admin.ModelAdmin):
     search_fields = ['videoID','caption']
 
 class testcaseInfoAdmin(admin.ModelAdmin):
-    list_display=['caseID','testerSerialNumber','videoID']
+    list_display=['caseID','testerSerialNumber','videoID','review_d1']
     search_fields = ['videoID','testerSerialNumber']
 
 class UserInfoAdmin(admin.ModelAdmin):
