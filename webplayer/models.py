@@ -1,5 +1,6 @@
 from tokenize import blank_re
 from django.db import models
+import django.utils.timezone as timezone
 
 # Create your models here.
 class Video(models.Model):
@@ -23,6 +24,8 @@ class testcase(models.Model):
     review_d1 = models.IntegerField() #dimension1, 2 represent natural, 1 represent uncertain, 0 represent unatural
     #review_d2 = models.IntegerField() #dimension2, 2 represent fluent, 1 represent uncertain, 0 represent unfluent
     #review_d3 = models.IntegerField() #dimension3, 2 represent sharp, 1 represent uncertain, 0 represent unsharp
+    # time = models.TimeField(auto_now_add=True)
+    test_time = models.DateTimeField('add time',default = timezone.now)
 
 class User(models.Model):
     userID = models.AutoField(primary_key=True)

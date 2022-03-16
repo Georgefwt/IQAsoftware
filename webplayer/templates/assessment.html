@@ -51,7 +51,7 @@
         $('#btn_submit').click(function(){
           let videoid = $('#current_videoID').text();
           if (dim1!=-1&&sessionStorage['videostatus']=='done'){
-            $.get('/get_quality/?dim1='+dim1+'&dim2='+dim2+'&dim3='+dim3+'&id='+videoid,function(data){
+            $.get('/get_quality/?dim1='+dim1+'&id='+videoid,function(data){
               if (data["status"]!='ok') console.log("can't recieve response");
               else {
                 console.log('send data successfully');
