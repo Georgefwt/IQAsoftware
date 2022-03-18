@@ -167,3 +167,9 @@ def get_next_video(request): # prepare for next video
 
 def thanksPage(request):
     return render(request, "thanks.html")
+
+def available(request):
+    available_serial = User.objects.filter(userName = None)
+    for user in available_serial:
+        user.userSerialNumber = user.userSerialNumber[:8]+'*'*12
+    return render(request,"availableserial.html",{"available_serial":available_serial})

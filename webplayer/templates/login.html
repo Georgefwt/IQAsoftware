@@ -27,6 +27,7 @@
         <div class="mb-3">
           <label for="exampleInputPassword1" class="form-label" style="font-size: 1.2em;">序列号：</label>
           <input type="text" name="serialnumber" class="form-control" id="exampleInputPassword1">
+          <div id="emailHelp" class="form-text">不确定序列号能否使用？<a href="{% url 'availableserialpage' %}">点此</a>查看可用序列号</div>
         </div>
         <button type="submit" class="btn btn-primary" style="display:block;margin:0 auto;">登录</button>
       </form>

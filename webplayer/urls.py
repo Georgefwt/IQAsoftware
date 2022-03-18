@@ -16,7 +16,8 @@ urlpatterns = [
     path('notice/',views.notice,name='notice'),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
     path('get_quality/',views.get_quality),
-    path('get_next/',views.get_next_video)
+    path('get_next/',views.get_next_video),
+    path('available/',views.available,name='availableserialpage')
 ]
 
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
