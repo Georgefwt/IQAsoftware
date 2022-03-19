@@ -111,21 +111,35 @@ def get_quality(request): # get quality score
         if user.user_tested_times >= 30:
             return JsonResponse({"status":"fail"})
         dim1 = int(request.GET.get('dim1'))
+        dim2 = int(request.GET.get('dim2'))
         video_ID = int(request.GET.get('id'))
 
         current_video = Video.objects.get(videoID=video_ID)
         case = testcase()
         case.testerSerialNumber = user_serial
         case.videoID = video_ID
-        if (dim1!=-1):
+        if (dim1!=-1 and dim2!=-1):
             case.review_d1 = dim1
+            case.review_d2 = dim2
 
-            if dim1 == 2:
+            if dim1 == 4:
+                current_video.review_d1r4+=1
+            elif dim1 == 3:
+                current_video.review_d1r3+=1
+            elif dim1 == 2:
                 current_video.review_d1r2+=1
             elif dim1 == 1:
                 current_video.review_d1r1+=1
             elif dim1 ==0:
                 current_video.review_d1r0+=1
+            else:
+                return JsonResponse({"status":"fail"})
+            if dim2 == 2:
+                current_video.review_d2r2+=1
+            elif dim2 == 1:
+                current_video.review_d2r1+=1
+            elif dim2 ==0:
+                current_video.review_d2r0+=1
             else:
                 return JsonResponse({"status":"fail"})
 

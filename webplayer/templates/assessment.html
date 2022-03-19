@@ -10,7 +10,7 @@
       let testednumber={{ testednumber }};
       let dim1 = -1;
       let dim2 = -1;
-      let dim3 = -1;
+
       sessionStorage.setItem('videostatus','playing'); 
 
       function repaint_video(data){
@@ -22,22 +22,27 @@
         $('#current_videocount_p').text("您当前已评估了"+testednumber+"个视频，还有"+(30-testednumber)+"个视频需要评估。");
         $('#btn_submit').attr("disabled",true);
         dim1 = -1;
-        // dim2 = -1;
-        // dim3 = -1;
+        dim2 = -1;
+
         watchMaxTime = 0;
         sessionStorage.setItem('videostatus','playing'); 
+        $("#btn1_4").prop('checked', false);
+        $("#btn1_3").prop('checked', false);
         $("#btn1_2").prop('checked', false);
         $("#btn1_1").prop('checked', false);
         $("#btn1_0").prop('checked', false);
-        // $("#btn2_2").prop('checked', false);
-        // $("#btn2_1").prop('checked', false);
-        // $("#btn2_0").prop('checked', false);
-        // $("#btn3_2").prop('checked', false);
-        // $("#btn3_1").prop('checked', false);
-        // $("#btn3_0").prop('checked', false);
+        $("#btn2_2").prop('checked', false);
+        $("#btn2_1").prop('checked', false);
+        $("#btn2_0").prop('checked', false);
       }
 
       $(function(){
+        $('#btn1_4').click(function(){
+         dim1 = 4;
+        })
+        $('#btn1_3').click(function(){
+         dim1 = 3;
+        })
         $('#btn1_2').click(function(){
          dim1 = 2;
         })
@@ -47,11 +52,20 @@
         $('#btn1_0').click(function(){
           dim1 = 0;
         })
+        $('#btn2_2').click(function(){
+          dim2 = 2;
+        })
+        $('#btn2_1').click(function(){
+          dim2 = 1;
+        })
+        $('#btn2_0').click(function(){
+          dim2 = 0;
+        })
 
         $('#btn_submit').click(function(){
           let videoid = $('#current_videoID').text();
-          if (dim1!=-1&&sessionStorage['videostatus']=='done'){
-            $.get('/get_quality/?dim1='+dim1+'&id='+videoid,function(data){
+          if (dim1!=-1&&dim2!=-1&&sessionStorage['videostatus']=='done'){
+            $.get('/get_quality/?dim1='+dim1+'&dim2='+dim2+'&id='+videoid,function(data){
               if (data["status"]!='ok') console.log("can't recieve response");
               else {
                 console.log('send data successfully');
@@ -86,7 +100,7 @@
             <p id="current_videocount_p" style="font-size: 1.2rem;">您当前已评估了{{ testednumber }}个视频，还有{{ testednumber|mul:-1|add:30 }}个视频需要评估。
               若有问题，请联系georgefen@qq.com</p>
           </strong>
-          
+
           <div class="alert alert-warning" role="alert">
             若视频无法播放，可以尝试清理浏览器缓存。
           </div>
@@ -113,7 +127,7 @@
             autoplay="true"
             muted
             data-setup='{"fluid":true,"aspectRatio":"16:9"}'>
-              <source src="{{video.video.url}}" id="current_video" type="video/mp4" />
+              <source src="{{ video.video.url }}" id="current_video" type="video/mp4" />
               <p class="vjs-no-js">
                 To view this video please enable JavaScript, and consider upgrading to a
                 web browser that
@@ -132,23 +146,45 @@
         <div class="card-body">
 
           <div class="container" id="qa_button" style="text-align: center">
+
             <div class="container">
-              
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="d1" id="btn1_2" value="option1" />
-                <label class="form-check-label" for="inlineRadio1">视频人脸部分自然</label>
+                <input class="form-check-input" type="radio" name="d1" id="btn1_4" value="option5" />
+                <label class="form-check-label" for="inlineRadio1">人脸自然度高</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d1" id="btn1_3" value="option4" />
+                <label class="form-check-label" for="inlineRadio2">人脸自然度较高</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d1" id="btn1_2" value="option3" />
+                <label class="form-check-label" for="inlineRadio3">人脸自然度中等</label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="d1" id="btn1_1" value="option2" />
+                <label class="form-check-label" for="inlineRadio1">人脸自然度较低</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d1" id="btn1_0" value="option1" />
+                <label class="form-check-label" for="inlineRadio1">人脸自然度低</label>
+              </div>
+            </div>
+
+            <div class="container">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d2" id="btn2_2" value="option3" />
+                <label class="form-check-label" for="inlineRadio1">视频人脸真实</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="d2" id="btn2_1" value="option2" />
                 <label class="form-check-label" for="inlineRadio2">不确定</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="d1" id="btn1_0" value="option3" />
-                <label class="form-check-label" for="inlineRadio3">视频人脸部分不自然</label>
+                <input class="form-check-input" type="radio" name="d2" id="btn2_0" value="option1" />
+                <label class="form-check-label" for="inlineRadio3">视频人脸伪造</label>
               </div>
-              
             </div>
-            
+
             <button type="button" class="btn btn-primary" id="btn_submit" disabled>下一个视频</button>
           </div>
 
